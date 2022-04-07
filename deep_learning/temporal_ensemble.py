@@ -94,7 +94,7 @@ def load_models(model_folder, n_classes):
 if __name__=="__main__":
     """
     Here I look at accuracy if I take 3 or 5 consecutive samples and use majority voting"""
-
+    save = True
     os.environ["CUDA_VISIBLE_DEVICES"] = "1"
     n_classes = 4
     subjects = ['tt', 'ocdbd2', 'ocdbd3', 'ocdbd4', 'ocdbd5', 'ocdbd6', 'ocdbd7', 'ocdbd8', 'ocdbd9', 'ocdbd10',

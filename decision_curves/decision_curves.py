@@ -6,6 +6,7 @@ from boosted_trees.classic_machine_learning import prepare_subject_data, MyLabel
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics._ranking import _binary_clf_curve
 import seaborn as sns
+from matplotlib import pyplot as plt
 sns.set_theme()
 
 import numpy as np
@@ -75,11 +76,14 @@ if __name__ == '__main__':
     # load temporal ensemble predictions
     temporal_ensemble_path = f'{os.getenv("HOME")}/deep_LFP/experiments/temporal_ensemble/5/ocdbd2/ensemble_predictions.npy'
     temporal_ensemble_preds = scipy.special.softmax(np.load(temporal_ensemble_path), axis=1)[:, 2]
+    temporal_ensemble_preds = temporal_ensemble_preds.reshape(48,5).mean(axis=1)
 
-    temporal_ensemble_auc = roc_auc_score(deep_test==2,temporal_ensemble_preds)
-    fps, tps, thresholds = _binary_clf_curve(deep_test==2, temporal_ensemble_preds)
+    true_labels = (deep_test==2).reshape(48,5)[:, 0]
+    temporal_ensemble_auc = roc_auc_score(true_labels, temporal_ensemble_preds)
+    fps, tps, thresholds = _binary_clf_curve(true_labels, temporal_ensemble_preds)
     n = temporal_ensemble_preds.shape[0]
     net_benefit = (tps/n) - (fps/n) * thresholds/(1-thresholds)
     sns.lineplot(x=thresholds, y=net_benefit, label='InceptionTime temporal ensemble', ci=None)
 
-
+    plt.ylim([-0.1, 0.3])
+    plt.show()

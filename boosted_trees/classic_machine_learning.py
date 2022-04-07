@@ -1,3 +1,4 @@
+import os
 import random
 import warnings
 import pathlib
@@ -244,9 +245,9 @@ class MyLabelEncoder(LabelEncoder):
 
 def prepare_subject_data(train=True, bands=None):
     if train:
-        path = pathlib.Path('./data/states/training_sample11_non_overlapping_states_3_sec_resampled_rounds.pkl')
+        path = pathlib.Path(f'{os.getenv("HOME")}/deep_LFP/data/states/training_sample11_non_overlapping_states_3_sec_resampled_rounds.pkl')
     else:
-        path = pathlib.Path('./data/states/test_samples11_non_overlapping_states_3sec_resampled.pkl')
+        path = pathlib.Path(f'{os.getenv("HOME")}/deep_LFP/data/states/test_samples11_non_overlapping_states_3sec_resampled.pkl')
     array, df = load_data(path)
     df['sample_no'] = df.groupby(['subjects']).cumcount()
     df_train = calculate_power_array(bands, df, array)
